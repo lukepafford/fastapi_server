@@ -1,0 +1,12 @@
+[Unit]
+Description=Fastapi server
+After=network.target
+
+[Service]
+User={{ python_user }}
+Group={{ python_user }}
+WorkingDirectory={{ project_dir }}/src/fastapi_server
+ExecStart={{ project_dir }}/venv/bin/uvicorn --host 0.0.0.0 --port {{ fastapi_server_port }} main:app --access-log --use-colors --proxy-headers
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+.idea
+*.code-workspace
+__pycache__
+*.yml
+fastapi.conf
+venv
+.env
