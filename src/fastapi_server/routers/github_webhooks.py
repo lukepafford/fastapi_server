@@ -25,7 +25,12 @@ def validate_github_signature(
         return False
 
 
-@router.post("/ansible2_webhook")
+invalid_header_message = "Invalid header: X-HUB-SIGNATURE"
+
+
+@router.post(
+    "/ansible2_webhook", responses={403: {"description": invalid_header_message}},
+)
 async def ansible2_webhook(
     request: Request,
     background_tasks: BackgroundTasks,
@@ -33,7 +38,7 @@ async def ansible2_webhook(
 ):
     payload = await request.body()
     if not validate_github_signature(settings.github_secret, payload, x_hub_signature):
-        raise HTTPException(status_code=403, detail="Invalid Github payload")
+        raise HTTPException(status_code=403, detail=invalid_header_message)
 
     background_tasks.add_task(
         sync_tower_project, settings.tower_url, settings.tower_token
